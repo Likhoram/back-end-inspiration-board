@@ -3,7 +3,7 @@ from app.db import db
 from app.models.board import Board
 from app.models.card import Card
 
-def validate_board(cls, id, refresh=False) -> Board:
+def validate_model(cls, id, refresh=False):
     try:
         id = int(id)
     except:
@@ -29,14 +29,14 @@ def create_model(cls,data_dict):
     return new_model.to_dict(), 201
 
 def delete_model(cls, id):
-    model = validate_board(cls, id)
+    model = validate_model(cls, id)
 
     db.session.delete(model)
     db.session.commit()
     return make_response({"message": f"{cls.__name__} {id} successfully deleted"}, 200)
 
 def update_model(cls, id, data_dict):
-    model = validate_board(cls, id, refresh=True)
+    model = validate_model(cls, id, refresh=True)
 
     for key, value in data_dict.items():
         setattr(model, key, value)
