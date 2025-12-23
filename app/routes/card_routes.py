@@ -1,14 +1,14 @@
 from flask import Blueprint, request, Response
 from ..models.card import Card
 from ..db import db
-from ..routes.routes_utilities import (
+from .route_utilities import (
     validate_model,
     create_model,
     get_models_with_filters,
     update_model_fields,
     delete_model,
 )
-from ..routes.routes_utilities import empty_response
+from .route_utilities import empty_response
 from datetime import datetime
 from dotenv import load_dotenv
 import os
