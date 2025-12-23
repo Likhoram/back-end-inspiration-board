@@ -25,3 +25,24 @@ def get_boards():
     boards_list = [board.to_dict() for board in boards]
     return make_response({"boards": boards_list}, 200)
 
+@bp.route("/<name>", methods=["POST"])
+def link_cards_with_board_name(name: str):
+    data = request.get_json()
+    board = validate_board(Board, name, by_name=True)
+
+    for card_data in data.get("cards", []):
+        card = Card.from_dict(card_data)
+        card.board = board
+        db.session.add(card)
+
+    db.session.commit()
+
+    response_body = {
+        "id": board.id,
+        "title": board.title,
+        "name": board.name,
+        "cards": [card.to_dict() for card in board.cards]
+    }
+
+    return response_body, 200
+
