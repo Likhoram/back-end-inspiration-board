@@ -13,16 +13,15 @@ class Board(db.Model):
             "id": self.id,
             "title": self.title,
             "name": self.name,
+            "cards": [card.to_dict() for card in self.cards] if include_cards else []
         }
-
-        if include_cards:
-            model_dict["cards"] = [card.to_dict() for card in self.cards]
 
         return model_dict
 
     @classmethod
     def from_dict(cls, data: dict) -> "Board":
         return cls(
+            id=data.get("id"),
             title=data.get("title", ""),
             name=data.get("name", ""),
             cards=[Card.from_dict(card_data) for card_data in data.get("cards", [])] if "cards" in data else []
