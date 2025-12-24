@@ -4,7 +4,7 @@ from app.models.board import Board
 from app.models.card import Card
 from .route_utilities import validate_model, create_model, delete_model
 
-bp = Blueprint("cards", __name__, url_prefix="/boards/<board_id>/cards")
+bp = Blueprint("card_bp", __name__, url_prefix="/boards/<board_id>/cards")
 
 @bp.route("", methods=["POST"])
 def create_card(board_id):

@@ -4,7 +4,9 @@ from typing import Optional
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-class Board(db.Model):
+class Card(db.Model):
+    __tablename__ = "card"
+    
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     message: Mapped[str]  
     likes: Mapped[int] = mapped_column(default=0)
