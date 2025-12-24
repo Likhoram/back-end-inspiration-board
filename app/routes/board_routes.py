@@ -2,9 +2,9 @@ from flask import Blueprint, abort, make_response, request, Response
 from app.db import db
 from app.models.board import Board
 from app.models.card import Card
-from .route_utilities import validate_board, create_model, delete_model, update_model, get_models_or_abort
+from .route_utilities import validate_model, create_model, delete_model, update_model, get_models_or_abort
 
-bp = Blueprint("boards", __name__, url_prefix="/boards")
+bp = Blueprint("board_bp", __name__, url_prefix="/boards")
 
 @bp.route("", methods=["POST"])
 def create_board():
@@ -13,7 +13,7 @@ def create_board():
 
 @bp.route("/<id>", methods=["DELETE"])
 def delete_board(id: str):
-    board = validate_board(Board, id)
+    board = validate_model(Board, id)
 
     db.session.delete(board)
     db.session.commit()
@@ -28,7 +28,7 @@ def get_boards():
 @bp.route("/<name>", methods=["POST"])
 def link_cards_with_board_name(name: str):
     data = request.get_json()
-    board = validate_board(Board, name, by_name=True)
+    board = validate_model(Board, name, by_name=True)
 
     for card_data in data.get("cards", []):
         card = Card.from_dict(card_data)

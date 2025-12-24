@@ -3,12 +3,14 @@ from typing import Optional
 from ..db import db
 
 class Board(db.Model):
+    __tablename__ = "board"
+
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     title: Mapped[str] = mapped_column(nullable=False)
     name: Mapped[str] = mapped_column(nullable=False)
     cards: Mapped[Optional[list["Card"]]] = relationship(back_populates="board")
 
-    def to_dict(self, include_cards=False) -> dict:
+    def to_dict(self, include_cards=True) -> dict:
         model_dict = {
             "id": self.id,
             "title": self.title,
