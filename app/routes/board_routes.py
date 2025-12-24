@@ -25,6 +25,11 @@ def get_boards():
     boards_list = [board.to_dict() for board in boards]
     return make_response({"boards": boards_list}, 200)
 
+@bp.route("/<id>", methods=["GET"])
+def get_board(id: str):
+    board = validate_model(Board, id)
+    return make_response(board.to_dict(), 200)
+
 @bp.route("/<name>", methods=["POST"])
 def link_cards_with_board_name(name: str):
     data = request.get_json()
