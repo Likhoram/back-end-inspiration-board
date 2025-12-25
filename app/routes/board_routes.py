@@ -33,7 +33,9 @@ def get_board(id: str):
 @bp.route("/<name>", methods=["POST"])
 def link_cards_with_board_name(name: str):
     data = request.get_json()
-    board = validate_model(Board, name, by_name=True)
+    board = Board.query.filter_by(name=name).first()
+    if board is None:
+        abort(404, description=f"Board with name {name} not found")
 
     for card_data in data.get("cards", []):
         card = Card.from_dict(card_data)
