@@ -44,12 +44,5 @@ def link_cards_with_board_id(id: str):
 
     db.session.commit()
 
-    # response_body = {
-    #     "id": board.id,
-    #     "title": board.title,
-    #     "name": board.name,
-    #     "cards": [card.to_dict() for card in board.cards]
-    # }
-
     return make_response(board.to_dict(), 200)
 
