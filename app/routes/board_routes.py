@@ -17,7 +17,7 @@ def delete_board(id: str):
 
 @bp.route("", methods=["GET"])
 def get_boards():
-    boards = db.session.query(Board).all()
+    boards = db.session.query(Board).order_by(Board.id).all()
     boards_list = [board.to_dict() for board in boards]
     return make_response({"boards": boards_list}, 200)
 
@@ -41,9 +41,9 @@ def link_cards_with_board_name(name: str):
         abort(404, description=f"Board with name {name} not found")
     for card_data in data.get("cards", []):
         card = Card.from_dict(card_data)
+        card.board = board
+        db.session.add(card)
 
-    card.board = board
-    db.session.add(card)
     db.session.commit()
 
     response_body = {"id": board.id,
