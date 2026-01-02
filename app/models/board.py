@@ -8,7 +8,9 @@ class Board(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     title: Mapped[str] = mapped_column(nullable=False)
     name: Mapped[str] = mapped_column(nullable=False)
-    cards: Mapped[Optional[list["Card"]]] = relationship(back_populates="board")
+    cards: Mapped[Optional[list["Card"]]] = relationship(
+        back_populates="board",
+        order_by="Card.id",)
 
     def to_dict(self, include_cards=True) -> dict:
         model_dict = {
