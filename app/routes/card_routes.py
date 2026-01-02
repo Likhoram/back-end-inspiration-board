@@ -22,6 +22,16 @@ def get_cards(board_id):
     cards = db.session.query(Card).filter(Card.board_id == board_id).order_by(Card.id).all()
     return make_response({"cards": [card.to_dict() for card in cards]}, 200)
 
+@bp.route("/<id>", methods=["GET"])
+def get_card(board_id, id):
+    validate_model(Board, board_id)
+    card = validate_model(Card, id)
+
+    if card.board_id != int(board_id):
+        abort(make_response({"message": f"Card {id} does not belong to Board {board_id}"}, 400))
+
+    return make_response(card.to_dict(), 200)
+
 @bp.route("/<id>/like", methods=["PATCH"])
 def like_card(board_id, id):
     validate_model(Board, board_id)
