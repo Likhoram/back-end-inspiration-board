@@ -36,10 +36,11 @@ def delete_model(cls, id):
     return make_response({"message": f"{cls.__name__} {id} successfully deleted"}, 200)
 
 def update_model(cls, id, data_dict):
-    model = validate_model(cls, id, refresh=True)
+    # model = validate_model(cls, id, refresh=True)
 
     for key, value in data_dict.items():
-        setattr(model, key, value)
+        if hasattr(cls, key):
+            setattr(model, key, value)
 
     db.session.commit()
     return model.to_dict(), 200

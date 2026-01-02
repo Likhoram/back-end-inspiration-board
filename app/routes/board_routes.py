@@ -13,11 +13,7 @@ def create_board():
 
 @bp.route("/<id>", methods=["DELETE"])
 def delete_board(id: str):
-    board = validate_model(Board, id)
-
-    db.session.delete(board)
-    db.session.commit()
-    return make_response({"message": f"Board {id} successfully deleted"}, 200)
+    return delete_model(Board, id)
 
 @bp.route("", methods=["GET"])
 def get_boards():
@@ -30,26 +26,30 @@ def get_board(id: str):
     board = validate_model(Board, id)
     return make_response(board.to_dict(), 200)
 
-@bp.route("/<name>", methods=["POST"])
-def link_cards_with_board_name(name: str):
+@bp.route("/<id>", methods=["PATCH"])
+def update_board(id: str):
     data = request.get_json()
-    board = Board.query.filter_by(name=name).first()
-    if board is None:
-        abort(404, description=f"Board with name {name} not found")
+    board = validate_model(Board, id)
+    return update_model(board, data)
+
+@bp.route("/<id>/cards", methods=["POST"])
+def link_cards_with_board_id(id: str):
+    data = request.get_json()
+    board = validate_model(Board, id)
 
     for card_data in data.get("cards", []):
-        card = Card.from_dict(card_data)
-        card.board = board
-        db.session.add(card)
+        new_card = Card.from_dict(card_data)
+        new_card.board = board
+        db.session.add(new_card)
 
     db.session.commit()
 
-    response_body = {
-        "id": board.id,
-        "title": board.title,
-        "name": board.name,
-        "cards": [card.to_dict() for card in board.cards]
-    }
+    # response_body = {
+    #     "id": board.id,
+    #     "title": board.title,
+    #     "name": board.name,
+    #     "cards": [card.to_dict() for card in board.cards]
+    # }
 
-    return response_body, 200
+    return make_response(board.to_dict(), 200)
 
